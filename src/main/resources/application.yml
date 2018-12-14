@@ -1,0 +1,35 @@
+micronaut:
+  application.name: sample-micronaut-jpa
+
+endpoints:
+  beans:
+    enabled: true
+    sensitive: false
+
+datasources:
+  default:
+    name: 'default'
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  system:
+    name: 'system'
+    url: jdbc:h2:mem:system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+jpa:
+  default:
+    packages-to-scan:
+      - 'sample.model'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create-drop
+  system:
+    packages-to-scan:
+      - 'sample.context'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create-drop
+
+extension:
+  datafixture.enabled: true
+  messages:
+    basename: messages,messages-validation
