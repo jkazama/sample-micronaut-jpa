@@ -10,7 +10,7 @@ ext.lombok_version = "1.18.4"
 apply plugin:"application"
 apply plugin:"java"
 
-version "1.0.1"
+version "1.0.2"
 group "sample"
 
 repositories {
@@ -21,7 +21,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.micronaut:micronaut-bom:1.0.1'
+        mavenBom 'io.micronaut:micronaut-bom:1.0.2'
     }
 }
 
