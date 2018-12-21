@@ -4,12 +4,12 @@ import java.util.Optional;
 
 import javax.persistence.*;
 
+import io.micronaut.security.authentication.providers.*;
 import lombok.*;
 import sample.ValidationException.ErrorKeys;
 import sample.context.Dto;
 import sample.context.orm.*;
 import sample.model.constraints.*;
-import sample.util.PasswordEncoder;
 
 /**
  * 口座ログインを表現します。
@@ -19,7 +19,7 @@ import sample.util.PasswordEncoder;
 @Data
 @ToString(callSuper = false, exclude = { "password" })
 @EqualsAndHashCode(callSuper = false)
-public class Login extends OrmActiveRecord<Login> {
+public class Login extends OrmActiveRecord<Login> implements UserState {
     private static final long serialVersionUID = 1L;
 
     /** 口座ID */
@@ -31,6 +31,36 @@ public class Login extends OrmActiveRecord<Login> {
     /** パスワード(暗号化済) */
     @Password
     private String password;
+    
+    /** {@inheritDoc} */
+    @Override
+    public String getUsername() {
+        return loginId;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isPasswordExpired() {
+        return false;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isAccountExpired() {
+        return false;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isAccountLocked() {
+        return false;
+    }
 
     /** ログインIDを変更します。 */
     public Login change(final OrmRepository rep, final ChgLoginId p) {

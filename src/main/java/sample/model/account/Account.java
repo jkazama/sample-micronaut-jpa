@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import io.micronaut.security.authentication.providers.PasswordEncoder;
 import lombok.*;
 import sample.ValidationException;
 import sample.ValidationException.ErrorKeys;
@@ -14,7 +15,7 @@ import sample.context.actor.Actor.ActorRoleType;
 import sample.context.orm.*;
 import sample.model.account.type.AccountStatusType;
 import sample.model.constraints.*;
-import sample.util.*;
+import sample.util.Validator;
 
 /**
  * 口座を表現します。

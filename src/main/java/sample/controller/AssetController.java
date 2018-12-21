@@ -5,10 +5,10 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.micronaut.http.annotation.*;
-import io.micronaut.validation.Validated;
 import lombok.Value;
 import sample.ActionStatusType;
 import sample.context.Dto;
@@ -19,7 +19,6 @@ import sample.usecase.AssetService;
 /**
  * 資産に関わる顧客のUI要求を処理します。
  */
-@Validated
 @Controller("/api/asset")
 public class AssetController {
 
@@ -45,7 +44,7 @@ public class AssetController {
      * 振込出金依頼をします。
      */
     @Post("/cio/withdraw")
-    public Map<String, Long> withdraw(RegCashOut p) {
+    public Map<String, Long> withdraw(@Valid RegCashOut p) {
         HashMap<String, Long> result = new HashMap<>();
         result.put("id", service.withdraw(p));
         return result;

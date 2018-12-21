@@ -1,8 +1,26 @@
 micronaut:
   application.name: sample-micronaut-jpa
-
+  security:
+    enabled: true
+    endpoints:
+      login:
+        enabled: true
+        path: /api/login
+      logout:
+        enabled: true
+        path: /api/logout
+  server:
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins: http://localhost:3000
+ 
 endpoints:
   beans:
+    enabled: true
+    sensitive: false
+  routes:
     enabled: true
     sensitive: false
 
@@ -33,3 +51,6 @@ extension:
   datafixture.enabled: true
   messages:
     basename: messages,messages-validation
+  security.auth:
+    enabled: true
+    admin: false

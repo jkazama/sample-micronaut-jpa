@@ -11,12 +11,18 @@ import sample.context.actor.*;
 @Singleton
 public class DomainHelper {
 
-    @Inject
-    private Provider<ActorSession> actorSession;
-    @Inject
-    private Provider<Timestamper> time;
-    @Inject
-    private Provider<AppSettingHandler> settingHandler;
+    private final Provider<ActorSession> actorSession;
+    private final Provider<Timestamper> time;
+    private final Provider<AppSettingHandler> settingHandler;
+    
+    public DomainHelper(
+            Provider<ActorSession> actorSession,
+            Provider<Timestamper> time,
+            Provider<AppSettingHandler> settingHandler) {
+        this.actorSession = actorSession;
+        this.time = time;
+        this.settingHandler = settingHandler;
+    }
 
     /** ログイン中のユースケース利用者を取得します。 */
     public Actor actor() {

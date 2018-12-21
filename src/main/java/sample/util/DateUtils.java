@@ -22,7 +22,7 @@ public abstract class DateUtils {
     }
 
     public static Optional<LocalDate> dayOpt(String dayStr) {
-        if (StringUtils.hasText(dayStr)) {
+        if (!StringUtils.hasText(dayStr)) {
             return Optional.empty();
         }
         return Optional.of(LocalDate.parse(dayStr.trim(), DateTimeFormatter.ISO_LOCAL_DATE));
@@ -34,7 +34,7 @@ public abstract class DateUtils {
     }
 
     public static Optional<LocalDateTime> dateOpt(String dateStr, DateTimeFormatter formatter) {
-        if (StringUtils.hasText(dateStr)) {
+        if (!StringUtils.hasText(dateStr)) {
             return Optional.empty();
         }
         return Optional.of(LocalDateTime.parse(dateStr.trim(), formatter));

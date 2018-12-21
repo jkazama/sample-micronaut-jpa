@@ -7,9 +7,9 @@ import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpo
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 import io.micronaut.context.annotation.*;
+import io.micronaut.security.authentication.providers.PasswordEncoder;
 import sample.context.ResourceBundleHandler;
-import sample.util.PasswordEncoder;
-import sample.util.PasswordEncoder.RawPasswordEncoder;
+import sample.usecase.security.HashPasswordEncoder;
 
 /**
  * アプリケーションにおけるBean定義を表現します。
@@ -20,8 +20,7 @@ public class ApplicationConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        //TODO: BCryptへ変更予定
-        return new RawPasswordEncoder();
+        return new HashPasswordEncoder(true);
     }
 
     /** HibernateのLazyLoading回避対応。  see JacksonAutoConfiguration */

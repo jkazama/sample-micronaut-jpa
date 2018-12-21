@@ -12,7 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;
-import lombok.Setter;
+import io.micronaut.security.authentication.providers.PasswordEncoder;
 import sample.ActionStatusType;
 import sample.context.*;
 import sample.context.orm.*;
@@ -30,20 +30,20 @@ import sample.util.*;
  */
 @Singleton
 @Requires(property = "extension.datafixture.enabled")
-@Setter
 public class DataFixtures implements ApplicationEventListener<ServerStartupEvent> {
     
-    private final DefaultRepository rep;
+    private final OrmRepository rep;
     private final PlatformTransactionManager txm;
-    private final SystemRepository repSystem;
+    private final OrmRepository repSystem;
     private final PlatformTransactionManager txmSystem;
     private final BusinessDayHandler businessDay;
     private final PasswordEncoder encoder;
     
     public DataFixtures(
-            DefaultRepository rep,
+            OrmRepository rep,
             PlatformTransactionManager txm,
-            SystemRepository repSystem,
+            @Named(SystemRepository.Name)
+            OrmRepository repSystem,
             @Named(SystemRepository.Name)
             PlatformTransactionManager txmSystem,
             BusinessDayHandler businessDay,

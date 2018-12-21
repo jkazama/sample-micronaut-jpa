@@ -2,7 +2,7 @@ package sample.context.orm;
 
 import java.util.Optional;
 
-import javax.inject.Singleton;
+import javax.inject.*;
 import javax.persistence.*;
 
 import io.micronaut.context.annotation.Primary;
@@ -12,6 +12,7 @@ import sample.context.DomainHelper;
 /** 標準スキーマのRepositoryを表現します。 */
 @Singleton
 @Primary
+@Named(DefaultRepository.Name)
 @Setter
 public class DefaultRepository extends OrmRepository {
     public static final String Name = "default";

@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import org.hibernate.criterion.MatchMode;
 
+import io.micronaut.security.authentication.providers.*;
 import lombok.*;
 import sample.ValidationException.ErrorKeys;
 import sample.context.Dto;
@@ -13,7 +14,7 @@ import sample.context.actor.Actor;
 import sample.context.actor.Actor.ActorRoleType;
 import sample.context.orm.*;
 import sample.model.constraints.*;
-import sample.util.*;
+import sample.util.Validator;
 
 /**
  * 社員を表現します。
@@ -22,7 +23,7 @@ import sample.util.*;
 @Data
 @ToString(callSuper = false, exclude = { "password" })
 @EqualsAndHashCode(callSuper = false)
-public class Staff extends OrmActiveRecord<Staff> {
+public class Staff extends OrmActiveRecord<Staff> implements UserState {
     private static final long serialVersionUID = 1l;
 
     /** ID */
@@ -40,6 +41,36 @@ public class Staff extends OrmActiveRecord<Staff> {
         return new Actor(id, name, ActorRoleType.Internal);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getUsername() {
+        return id;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isAccountExpired() {
+        return false;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isAccountLocked() {
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isPasswordExpired() {
+        return false;
+    }
+    
     /** パスワードを変更します。 */
     public Staff change(final OrmRepository rep, final PasswordEncoder encoder, final ChgPassword p) {
         return p.bind(this, encoder.encode(p.plainPassword)).update(rep);
