@@ -5,6 +5,8 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.SessionFactory;
+
 import sample.ValidationException;
 import sample.ValidationException.ErrorKeys;
 import sample.context.*;
@@ -19,19 +21,22 @@ import sample.context.Entity;
  */
 public abstract class OrmRepository implements Repository {
 
+    private final SessionFactory sf;
     private final DomainHelper dh;
     private final Optional<OrmInterceptor> interceptor;
     
-    public OrmRepository(DomainHelper dh, Optional<OrmInterceptor> interceptor) {
+    public OrmRepository(SessionFactory sf, DomainHelper dh, Optional<OrmInterceptor> interceptor) {
+        this.sf = sf;
         this.dh = dh;
         this.interceptor = interceptor;
     }
 
     /**
      * 管理するEntityManagerを返します。
-     * <p>継承先で管理したいデータソースのEntityManagerを返してください。
      */
-    public abstract EntityManager em();
+    public EntityManager em() {
+        return sf.getCurrentSession();
+    }
 
     /** {@inheritDoc} */
     @Override

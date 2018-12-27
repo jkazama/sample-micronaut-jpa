@@ -2,6 +2,8 @@ micronaut:
   application.name: sample-micronaut-jpa
   security:
     enabled: true
+    session:
+      enabled: true
     endpoints:
       login:
         enabled: true

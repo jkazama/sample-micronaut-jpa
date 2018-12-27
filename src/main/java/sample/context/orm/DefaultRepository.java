@@ -3,7 +3,8 @@ package sample.context.orm;
 import java.util.Optional;
 
 import javax.inject.*;
-import javax.persistence.*;
+
+import org.hibernate.SessionFactory;
 
 import io.micronaut.context.annotation.Primary;
 import lombok.Setter;
@@ -17,18 +18,12 @@ import sample.context.DomainHelper;
 public class DefaultRepository extends OrmRepository {
     public static final String Name = "default";
 
-    @PersistenceContext(name = Name)
-    private EntityManager em;
-
     public DefaultRepository(
+            @Named(Name)
+            SessionFactory sf,
             DomainHelper dh,
             Optional<OrmInterceptor> interceptor) {
-        super(dh, interceptor);
-    }
-    
-    @Override
-    public EntityManager em() {
-        return em;
+        super(sf, dh, interceptor);
     }
     
 }

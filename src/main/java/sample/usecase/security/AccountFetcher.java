@@ -10,6 +10,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.providers.*;
 import io.reactivex.Flowable;
+import sample.ValidationException;
 import sample.context.orm.*;
 import sample.model.account.Login;
 
@@ -29,8 +30,9 @@ public class AccountFetcher implements UserFetcher {
     /** {@inheritDoc} */
     @Override
     public Publisher<UserState> findByUsername(String username) {
-        return TxTemplate.of(txm).readOnly().tx(() -> Flowable.just(
-                Login.getByLoginId(rep, username).orElse(null)));
+        UserState user = TxTemplate.of(txm).readOnly().tx(() -> Login.getByLoginId(rep, username)
+                .orElseThrow(() -> new ValidationException("error.login")));
+        return Flowable.just(user);
     }
 
     /** 口座を対象とした AuthoritiesFetcher */

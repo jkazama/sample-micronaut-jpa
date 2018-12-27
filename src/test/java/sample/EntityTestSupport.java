@@ -107,8 +107,8 @@ public class EntityTestSupport {
 
     protected void setupRepository() {
         setupEntityManagerFactory();
-        rep = new DefaultRepository(dh, Optional.of(entityInterceptor()));
-        rep.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
+        rep = new DefaultRepository(null, dh, Optional.of(entityInterceptor()));
+//        rep.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
     }
 
     protected void setupDataFixtures() {
