@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import io.micronaut.http.annotation.*;
 import lombok.Value;
@@ -26,12 +25,6 @@ public class AssetController {
 
     public AssetController(AssetService service) {
         this.service = service;
-    }
-
-    /** 未処理の振込依頼情報を検索します。 */
-    @Get("/hello")
-    public String hello(@NotNull String name) {
-        return "world";
     }
     
     /** 未処理の振込依頼情報を検索します。 */

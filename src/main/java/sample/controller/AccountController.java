@@ -2,9 +2,13 @@ package sample.controller;
 
 import java.util.*;
 
+import org.reactivestreams.Publisher;
+
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.session.SessionAuthenticationFetcher;
+import io.reactivex.Observable;
 import lombok.*;
 import sample.usecase.AccountService;
 
@@ -28,7 +32,8 @@ public class AccountController {
     
     @Get("/loginAccount")
     public LoginAccount loginAccount(HttpRequest<?> req) {
-        auth.fetchAuthentication(req);
+        Publisher<Authentication> fetch = auth.fetchAuthentication(req);
+        Authentication auth = Observable.fromPublisher(fetch).blockingSingle();
         return new LoginAccount("sample", "sample", new ArrayList<>());
     }
 

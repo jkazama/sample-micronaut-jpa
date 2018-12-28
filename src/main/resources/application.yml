@@ -11,12 +11,23 @@ micronaut:
       logout:
         enabled: true
         path: /api/logout
+    intercept-url-map:
+      - pattern: /api/**/*
+        access:
+          - ROLE_USER
+      - pattern: /api/admin/**/*
+        access:
+          - ROLE_ADMIN
   server:
     cors:
       enabled: true
       configurations:
         web:
           allowedOrigins: http://localhost:3000
+  session:
+    http:
+      cookiePath: /
+      cookieName: JSESSIONID
  
 endpoints:
   beans:
