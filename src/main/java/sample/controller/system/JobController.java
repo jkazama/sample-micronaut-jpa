@@ -2,6 +2,7 @@ package sample.controller.system;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 import sample.usecase.*;
 
 /**
@@ -13,6 +14,7 @@ import sample.usecase.*;
  * low: 社内/バッチプロセス切り出す場合はVM分散時の情報/排他同期を意識する必要があります。(DB同期/メッセージング同期/分散製品の利用 等)
  */
 @Controller("/api/system/job")
+@Validated
 public class JobController {
 
     private final AssetAdminService asset;

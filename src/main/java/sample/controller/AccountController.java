@@ -2,26 +2,24 @@ package sample.controller;
 
 import java.util.*;
 
-import org.reactivestreams.Publisher;
-
-import io.micronaut.http.*;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.session.SessionAuthenticationFetcher;
-import io.reactivex.Observable;
+import io.micronaut.validation.Validated;
 import lombok.*;
+import sample.context.actor.*;
 import sample.usecase.AccountService;
 
 @Controller("/api/account")
+@Validated
 public class AccountController {
     
     @SuppressWarnings("unused")
     private final AccountService service;
-    private final SessionAuthenticationFetcher auth;
+    private final ActorSession session;
     
-    public AccountController(AccountService service, SessionAuthenticationFetcher auth) {
+    public AccountController(AccountService service, ActorSession session) {
         this.service = service;
-        this.auth = auth;
+        this.session = session;
     }
     
     /** ログイン状態を確認します。 */
@@ -31,10 +29,8 @@ public class AccountController {
     }
     
     @Get("/loginAccount")
-    public LoginAccount loginAccount(HttpRequest<?> req) {
-        Publisher<Authentication> fetch = auth.fetchAuthentication(req);
-        Authentication auth = Observable.fromPublisher(fetch).blockingSingle();
-        return new LoginAccount("sample", "sample", new ArrayList<>());
+    public LoginAccount loginAccount() {
+        return LoginAccount.of(session.actor());
     }
 
     /** クライアント利用用途に絞ったパラメタ */
@@ -45,6 +41,10 @@ public class AccountController {
         private String id;
         private String name;
         private Collection<String> authorities;
+        
+        public static LoginAccount of(Actor actor) {
+            return new LoginAccount(actor.getId(), actor.getName(), actor.getAuthorities());
+        }
     }
 
 }

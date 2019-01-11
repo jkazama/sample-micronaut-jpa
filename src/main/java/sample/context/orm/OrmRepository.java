@@ -35,7 +35,14 @@ public abstract class OrmRepository implements Repository {
      * 管理するEntityManagerを返します。
      */
     public EntityManager em() {
-        return sf.getCurrentSession();
+        return sf().getCurrentSession();
+    }
+
+    /**
+     * 管理するSessionFactoryを返します。
+     */
+    public SessionFactory sf() {
+        return sf;
     }
 
     /** {@inheritDoc} */

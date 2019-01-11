@@ -24,7 +24,7 @@ public class MockDomainHelperFactory {
     
     public DomainHelper create(Map<String, String> mockSettingMap) {
         return new DomainHelper(
-                SimpleProvider.of(new ActorSession()),
+                SimpleProvider.of(new ActorSession(Optional.empty(), "sample")),
                 SimpleProvider.of(new Timestamper(mockClock)),
                 SimpleProvider.of(new AppSettingHandler(new HashMap<>())));
     }

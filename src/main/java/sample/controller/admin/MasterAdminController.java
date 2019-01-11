@@ -4,8 +4,9 @@ import java.util.*;
 
 import javax.validation.Valid;
 
-import io.micronaut.http.HttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 import lombok.*;
 import sample.model.master.Holiday.RegHoliday;
 import sample.usecase.MasterAdminService;
@@ -14,6 +15,7 @@ import sample.usecase.MasterAdminService;
  * マスタに関わる社内のUI要求を処理します。
  */
 @Controller("/api/admin/master")
+@Validated
 public class MasterAdminController {
 
     private final MasterAdminService service;
@@ -46,6 +48,7 @@ public class MasterAdminController {
 
     /** 休日を登録します。 */
     @Post("/holiday/")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     public HttpResponse<Void> registerHoliday(@Valid RegHoliday p) {
         service.registerHoliday(p);
         return HttpResponse.ok();

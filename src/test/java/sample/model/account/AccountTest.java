@@ -3,13 +3,15 @@ package sample.model.account;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 
 import sample.*;
 import sample.ValidationException.ErrorKeys;
 import sample.model.account.Account.*;
 import sample.model.account.type.AccountStatusType;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccountTest extends EntityTestSupport {
 
     @Override

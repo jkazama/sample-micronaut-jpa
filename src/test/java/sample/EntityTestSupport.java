@@ -5,18 +5,19 @@ import java.time.Clock;
 import java.util.*;
 import java.util.function.Supplier;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.*;
 import javax.sql.DataSource;
 
+import org.hibernate.SessionFactory;
 import org.junit.*;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.*;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import io.micronaut.configuration.jdbc.hikari.*;
 import io.micronaut.security.authentication.providers.PasswordEncoder;
 import sample.context.*;
+import sample.context.Entity;
 import sample.context.actor.ActorSession;
 import sample.context.orm.*;
 import sample.model.*;
@@ -35,7 +36,7 @@ public class EntityTestSupport {
     protected ActorSession session;
     protected DomainHelper dh;
     protected EntityManagerFactory emf;
-    protected DefaultRepository rep;
+    protected OrmRepository rep;
     protected PlatformTransactionManager txm;
     protected DataFixtures fixtures;
     protected Map<String, String> settingMap = new HashMap<>();
@@ -52,7 +53,7 @@ public class EntityTestSupport {
         time = dh.time();
         session = dh.actorSession();
         businessDay = BusinessDayHandler.of(time);
-        encoder = new HashPasswordEncoder(true);
+        encoder = new HashPasswordEncoder();
         setupRepository();
         setupDataFixtures();
         before();
@@ -107,8 +108,7 @@ public class EntityTestSupport {
 
     protected void setupRepository() {
         setupEntityManagerFactory();
-        rep = new DefaultRepository(null, dh, Optional.of(entityInterceptor()));
-//        rep.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
+        rep = new TestRepository((SessionFactory)emf, dh, Optional.of(entityInterceptor()));
     }
 
     protected void setupDataFixtures() {
@@ -139,15 +139,12 @@ public class EntityTestSupport {
     }
 
     private OrmInterceptor entityInterceptor() {
-        OrmInterceptor interceptor = new OrmInterceptor();
-        interceptor.setTime(time);
-        interceptor.setSession(session);
-        return interceptor;
+        return new OrmInterceptor(session, time);
     }
 
     /** トランザクション処理を行います。 */
     protected <T> T tx(Supplier<T> callable) {
-        return new TransactionTemplate(txm).execute((status) -> {
+        return TxTemplate.of(txm).tx(() -> {
             T ret = callable.get();
             if (ret instanceof Entity) {
                 ret.hashCode(); // for lazy loading
@@ -180,6 +177,21 @@ public class EntityTestSupport {
             config.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE");
             return new HikariUrlDataSource(config);
         }
+    }
+    
+    // for UT
+    public static class TestRepository extends OrmRepository {
+        
+        public TestRepository(SessionFactory sf, DomainHelper dh, Optional<OrmInterceptor> interceptor) {
+            super(sf, dh, interceptor);
+        }
+        
+        /** {@inheritDoc} */
+        @Override
+        public EntityManager em() {
+            return SharedEntityManagerCreator.createSharedEntityManager(this.sf());
+        }
+        
     }
     
 }

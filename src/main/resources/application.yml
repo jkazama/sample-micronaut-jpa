@@ -26,8 +26,8 @@ micronaut:
           allowedOrigins: http://localhost:3000
   session:
     http:
-      cookiePath: /
-      cookieName: JSESSIONID
+      cookie-path: /
+      cookie-name: JSESSIONID
  
 endpoints:
   beans:
@@ -64,6 +64,6 @@ extension:
   datafixture.enabled: true
   messages:
     basename: messages,messages-validation
-  security.auth:
-    enabled: true
+  auth:
+    dummy-username: sample
     admin: false

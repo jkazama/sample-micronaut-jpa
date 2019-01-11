@@ -181,7 +181,9 @@ public class AuditHandler {
         private final OrmRepository rep;
         private final PlatformTransactionManager txm;
 
-        public AuditPersister(OrmRepository rep, @Named(SystemRepository.Name) PlatformTransactionManager txm) {
+        public AuditPersister(
+                @Named(SystemRepository.Name) OrmRepository rep,
+                @Named(SystemRepository.Name) PlatformTransactionManager txm) {
             this.rep = rep;
             this.txm = txm;
         }

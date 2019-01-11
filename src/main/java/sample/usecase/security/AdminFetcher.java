@@ -7,9 +7,10 @@ import javax.inject.Singleton;
 import org.reactivestreams.Publisher;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import io.micronaut.context.annotation.*;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.authentication.providers.*;
 import io.reactivex.Flowable;
+import sample.ValidationException;
 import sample.context.orm.*;
 import sample.model.master.Staff;
 
@@ -31,8 +32,9 @@ public class AdminFetcher implements UserFetcher {
     /** {@inheritDoc} */
     @Override
     public Publisher<UserState> findByUsername(String username) {
-        return TxTemplate.of(txm).readOnly().tx(() -> Flowable.just(
-                Staff.get(rep, username).orElse(null)));
+        UserState user = TxTemplate.of(txm).readOnly().tx(() -> Staff.get(rep, username)
+                .orElseThrow(() -> new ValidationException("error.login")));
+        return Flowable.just(user);
     }
 
     /** 管理者を対象とした AuthoritiesFetcher */

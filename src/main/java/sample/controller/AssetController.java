@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 import lombok.Value;
 import sample.ActionStatusType;
 import sample.context.Dto;
@@ -19,6 +21,7 @@ import sample.usecase.AssetService;
  * 資産に関わる顧客のUI要求を処理します。
  */
 @Controller("/api/asset")
+@Validated
 public class AssetController {
 
     private final AssetService service;
@@ -37,7 +40,8 @@ public class AssetController {
      * 振込出金依頼をします。
      */
     @Post("/cio/withdraw")
-    public Map<String, Long> withdraw(@Valid RegCashOut p) {
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
+    public Map<String, Long> withdraw(@Body @Valid RegCashOut p) {
         HashMap<String, Long> result = new HashMap<>();
         result.put("id", service.withdraw(p));
         return result;

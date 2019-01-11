@@ -1,4 +1,4 @@
-package sample.usecase.security;
+package sample.controller;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -8,7 +8,6 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.authentication.*;
-import io.micronaut.security.endpoints.LoginController;
 import io.micronaut.security.handlers.LoginHandler;
 import io.reactivex.Single;
 import lombok.Data;
@@ -17,10 +16,10 @@ import sample.context.Dto;
 /**
  * ユーザ名とパスワードのキー変更拡張用途
  */
-@Replaces(LoginController.class)
-public class ApiLoginController extends LoginController {
+@Replaces(io.micronaut.security.endpoints.LoginController.class)
+public class LoginController extends io.micronaut.security.endpoints.LoginController {
 
-    public ApiLoginController(
+    public LoginController(
             Authenticator authenticator,
             LoginHandler loginHandler,
             ApplicationEventPublisher eventPublisher) {

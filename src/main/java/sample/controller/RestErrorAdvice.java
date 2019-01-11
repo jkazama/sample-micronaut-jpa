@@ -4,8 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.OptimisticLockException;
-import javax.validation.ConstraintViolationException;
+import javax.validation.*;
 
+import io.micronaut.core.convert.exceptions.ConversionErrorException;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Error;
@@ -13,7 +14,7 @@ import io.micronaut.web.router.exceptions.UnsatisfiedRouteException;
 import lombok.extern.slf4j.Slf4j;
 import sample.ValidationException;
 import sample.ValidationException.*;
-import sample.context.ResourceBundleHandler;
+import sample.context.MessageHandler;
 import sample.context.actor.ActorSession;
 
 /**
@@ -24,10 +25,10 @@ import sample.context.actor.ActorSession;
 @Slf4j
 public class RestErrorAdvice {
 
-    private final ResourceBundleHandler msg;
+    private final MessageHandler msg;
     private final ActorSession session;
 
-    public RestErrorAdvice(ResourceBundleHandler msg, ActorSession session) {
+    public RestErrorAdvice(MessageHandler msg, ActorSession session) {
         this.msg = msg;
         this.session = session;
     }
@@ -50,14 +51,31 @@ public class RestErrorAdvice {
         log.warn(e.getMessage(), e);
         return new ErrorHolder(msg, locale(), "error.OptimisticLockingFailure").result(HttpStatus.BAD_REQUEST);
     }
+    
+    /** 型マッピング時の例外 */
+    @Error(global = true, exception = ConversionErrorException.class)
+    public HttpResponse<Map<String, String[]>> handleConversionError(ConversionErrorException e) {
+        log.warn(e.getMessage());
+        Warns warns = Warns.init(e.getArgument().getName(), "typeMismatch." + e.getArgument().getTypeString(false));
+        return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
+    }    
 
     /** BeanValidation(JSR303)の制約例外 */
     @Error(global = true, exception = ConstraintViolationException.class)
     public HttpResponse<Map<String, String[]>> handleConstraintViolation(ConstraintViolationException e) {
         log.warn(e.getMessage());
         Warns warns = Warns.init();
-        e.getConstraintViolations().forEach((v) -> warns.add(v.getPropertyPath().toString(), v.getMessage()));
+        e.getConstraintViolations().forEach(v -> warns.add(propKey(v), v.getMessage()));
         return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
+    }
+    
+    // 制約例外時のキー（必要に応じて修正してください）
+    private String propKey(ConstraintViolation<?> v) {
+        String key = v.getPropertyPath().toString();
+        if (0 > key.indexOf('.')) {
+            return key;
+        }
+        return key.substring(key.lastIndexOf('.') + 1, key.length());
     }
 
     /** アプリケーション例外 */
@@ -84,19 +102,19 @@ public class RestErrorAdvice {
      */
     public static class ErrorHolder {
         private Map<String, List<String>> errors = new HashMap<>();
-        private ResourceBundleHandler msg;
+        private MessageHandler msg;
         private Locale locale;
 
-        public ErrorHolder(final ResourceBundleHandler msg, final Locale locale) {
+        public ErrorHolder(final MessageHandler msg, final Locale locale) {
             this.msg = msg;
             this.locale = locale;
         }
 
-        public ErrorHolder(final ResourceBundleHandler msg, final Locale locale, final ValidationException e) {
+        public ErrorHolder(final MessageHandler msg, final Locale locale, final ValidationException e) {
             this(msg, locale, e.list());
         }
 
-        public ErrorHolder(final ResourceBundleHandler msg, final Locale locale, final List<Warn> warns) {
+        public ErrorHolder(final MessageHandler msg, final Locale locale, final List<Warn> warns) {
             this.msg = msg;
             this.locale = locale;
             warns.forEach((warn) -> {
@@ -107,7 +125,7 @@ public class RestErrorAdvice {
             });
         }
 
-        public ErrorHolder(final ResourceBundleHandler msg, final Locale locale, String globalMsgKey,
+        public ErrorHolder(final MessageHandler msg, final Locale locale, String globalMsgKey,
                 String... msgArgs) {
             this.msg = msg;
             this.locale = locale;

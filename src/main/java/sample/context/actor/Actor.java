@@ -1,6 +1,6 @@
 package sample.context.actor;
 
-import java.util.Locale;
+import java.util.*;
 
 import lombok.*;
 import sample.context.Dto;
@@ -31,13 +31,15 @@ public class Actor implements Dto {
     private String channel;
     /** 利用者を特定する外部情報。(IPなど) */
     private String source;
+    /** 認可情報 */
+    private Set<String> authorities = new HashSet<>();
 
     public Actor(String id, ActorRoleType roleType) {
         this(id, id, roleType);
     }
 
     public Actor(String id, String name, ActorRoleType roleType) {
-        this(id, name, roleType, Locale.getDefault(), null, null);
+        this(id, name, roleType, Locale.getDefault(), null, null, new HashSet<>());
     }
 
     /**

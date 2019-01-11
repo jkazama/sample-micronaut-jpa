@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import io.micronaut.http.HttpResponse;
+import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 import sample.context.AppSetting;
 import sample.context.AppSetting.FindAppSetting;
 import sample.context.audit.*;
@@ -18,6 +19,7 @@ import sample.usecase.SystemAdminService;
  * システムに関わる社内のUI要求を処理します。
  */
 @Controller("/api/admin/system")
+@Validated
 public class SystemAdminController {
 
     private final SystemAdminService service;
@@ -46,6 +48,7 @@ public class SystemAdminController {
 
     /** アプリケーション設定情報を変更します。 */
     @Post("/setting/{id}")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     public HttpResponse<Void> changeAppSetting(String id, String value) {
         service.changeAppSetting(id, value);
         return HttpResponse.ok();

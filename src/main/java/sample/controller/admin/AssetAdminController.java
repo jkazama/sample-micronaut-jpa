@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 import sample.model.asset.CashInOut;
 import sample.model.asset.CashInOut.FindCashInOut;
 import sample.usecase.AssetAdminService;
@@ -13,6 +14,7 @@ import sample.usecase.AssetAdminService;
  * 資産に関わる社内のUI要求を処理します。
  */
 @Controller("/api/admin/asset")
+@Validated
 public class AssetAdminController {
 
     private final AssetAdminService service;
