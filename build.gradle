@@ -1,0 +1,70 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id "net.ltgt.apt-eclipse" version "0.18"
+    id "net.ltgt.apt-idea" version "0.18"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"	
+}
+
+ext.lombok_version = "1.18.4"
+ext.micronaut_version = "1.0.3"
+
+apply plugin:"application"
+apply plugin:"java"
+
+version micronaut_version
+group "sample"
+
+repositories {
+    jcenter()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("io.micronaut:micronaut-bom:${micronaut_version}")
+    }
+}
+
+dependencies {
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
+    annotationProcessor "io.micronaut:micronaut-security"
+    annotationProcessor "javax.persistence:javax.persistence-api:2.2"
+    implementation "io.micronaut:micronaut-inject"
+    implementation "io.micronaut:micronaut-validation"
+    implementation "io.micronaut:micronaut-security-session"
+    implementation "io.micronaut:micronaut-runtime"
+    implementation "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "io.micronaut:micronaut-management"
+    implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
+    implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.7"
+    implementation "com.ibm.icu:icu4j:63.1"
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    compileOnly "io.micronaut:micronaut-inject-java"
+    runtime "ch.qos.logback:logback-classic:1.2.3"
+    runtime "com.h2database:h2"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+    testImplementation "junit:junit:4.12"
+    testImplementation "io.micronaut:micronaut-inject-java"
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
+
+mainClassName = "sample.Application"
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.add('-parameters')
+}
+
+wrapper {
+    gradleVersion = "5.1.1"
+}
