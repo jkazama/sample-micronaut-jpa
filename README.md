@@ -119,4 +119,4 @@ you can do application with a single distribution file in Micronaut by making Ex
 ### License
 
 The license of this sample includes a code and is all *MIT License*.
-Use it as a base implementation at the time of the project start using Spring Boot.
+Use it as a base implementation at the time of the project start using Micronaut.
