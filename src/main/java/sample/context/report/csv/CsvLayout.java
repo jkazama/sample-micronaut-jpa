@@ -5,21 +5,21 @@ import java.util.*;
 import lombok.Data;
 
 /**
- * CSVレイアウトを表現します。
+ * Express CSV layout.
  */
 @Data
 public class CsvLayout {
-    /** 区切り文字 */
+    /** delimiter */
     private char delim = ',';
-    /** クオート文字 */
+    /** quote character */
     private char quote = '"';
-    /** クオート文字を付与しない時はtrue */
+    /** true if no quote character is given */
     private boolean nonQuote = false;
-    /** 改行文字 */
+    /** end of line character */
     private String eolSymbols = "\r\n";
-    /** ヘッダ文字列 */
+    /** header string */
     private String header = null;
-    /** 文字エンコーディング */
+    /** character encoding */
     private String charset = "UTF-8";
 
     public boolean hasHeader() {

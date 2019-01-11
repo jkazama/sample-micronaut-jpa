@@ -14,7 +14,7 @@ import sample.ValidationException;
 import sample.context.orm.*;
 import sample.model.account.Login;
 
-/** 口座を対象とした UserFetcher */
+/** UserFetcher for account */
 @Singleton
 @Requires(property = SecurityConstants.KeyAdmin, value = "false", defaultValue = "false")
 public class AccountFetcher implements UserFetcher {
@@ -35,7 +35,7 @@ public class AccountFetcher implements UserFetcher {
         return Flowable.just(user);
     }
 
-    /** 口座を対象とした AuthoritiesFetcher */
+    /** AuthoritiesFetcher for account */
     @Singleton
     @Requires(property = SecurityConstants.KeyAdmin, value = "false", defaultValue = "false")
     public static class AccountAuthoritiesFetcher implements AuthoritiesFetcher {

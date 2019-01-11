@@ -10,7 +10,7 @@ import io.micronaut.context.annotation.Primary;
 import lombok.Setter;
 import sample.context.DomainHelper;
 
-/** 標準スキーマのRepositoryを表現します。 */
+/** Repository of the standard schema. */
 @Singleton
 @Primary
 @Named(DefaultRepository.Name)

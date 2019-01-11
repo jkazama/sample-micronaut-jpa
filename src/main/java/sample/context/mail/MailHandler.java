@@ -3,8 +3,9 @@ package sample.context.mail;
 import javax.inject.Singleton;
 
 /**
- * メール処理を行います。
- * low: サンプルでは概念クラスだけ提供します。実装はSpringが提供するメールコンポーネントを利用してください。
+ * The mail client components.
+ * low: Provide only the concept class with the sample.
+ *  The implementation, please use the email component which Micronaut provides.
  */
 @Singleton
 public class MailHandler {

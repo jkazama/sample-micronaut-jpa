@@ -11,16 +11,16 @@ import lombok.Value;
 import sample.InvocationException;
 
 /**
- * ID単位のロックを表現します。
- * low: ここではシンプルに口座単位のIDロックのみをターゲットにします。
- * low: 通常はDBのロックテーブルに"for update"要求で悲観的ロックをとったりしますが、サンプルなのでメモリロックにしてます。
+ * The lock of the ID unit.
+ * low: It is simple and targets only the ID lock of the account unit here.
+ * low: You take the pessimistic lock by "for update" demand on a lock table of DB,
+ * but usually do it to memory lock because it is a sample.
  */
 @Singleton
 public class IdLockHandler {
 
     private Map<Serializable, ReentrantReadWriteLock> lockMap = new HashMap<>();
 
-    /** IDロック上で処理を実行します。 */
     public void call(Serializable id, LockType lockType, final Runnable command) {
         call(id, lockType, () -> {
             command.run();
@@ -81,13 +81,8 @@ public class IdLockHandler {
         });
     }
 
-    /**
-     * ロック種別を表現するEnum。
-     */
     public static enum LockType {
-        /** 読み取り専用ロック */
         Read,
-        /** 読み書き専用ロック */
         Write;
 
         public boolean isRead() {
@@ -99,7 +94,6 @@ public class IdLockHandler {
         }
     }
 
-    /** IdLock の対象と種別のペアを表現します。 */
     @Value
     public static class IdLockPair {
         private Serializable id;

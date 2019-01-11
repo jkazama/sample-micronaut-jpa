@@ -14,7 +14,7 @@ import sample.ValidationException;
 import sample.context.orm.*;
 import sample.model.master.Staff;
 
-/** 管理者を対象とした UserFetcher */
+/** UserFetcher for admin */
 @Singleton
 @Requires(property = SecurityConstants.KeyAdmin, value = "true")
 public class AdminFetcher implements UserFetcher {
@@ -37,7 +37,7 @@ public class AdminFetcher implements UserFetcher {
         return Flowable.just(user);
     }
 
-    /** 管理者を対象とした AuthoritiesFetcher */
+    /** AuthoritiesFetcher for admin */
     @Singleton
     @Requires(property = SecurityConstants.KeyAdmin, value = "true")
     public static class AdminAuthoritiesFetcher implements AuthoritiesFetcher {

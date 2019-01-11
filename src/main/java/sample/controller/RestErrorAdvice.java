@@ -18,8 +18,8 @@ import sample.context.MessageHandler;
 import sample.context.actor.ActorSession;
 
 /**
- * REST用の例外Map変換サポート。
- * <p>AOPアドバイスで全てのRestControllerに対して例外処理を当て込みます。
+ * Exception Map conversion support for RestController.
+ * <p>Insert an exception handling by AOP advice.
  */
 @Controller("/api/error")
 @Slf4j
@@ -37,7 +37,6 @@ public class RestErrorAdvice {
         return session.actor().getLocale();
     }
 
-    /** リクエストマッピング時の例外 */
     @Error(global = true, exception = UnsatisfiedRouteException.class)
     public HttpResponse<Map<String, String[]>> handleUnsatisfiedRoute(UnsatisfiedRouteException e) {
         log.warn(e.getMessage());
@@ -45,14 +44,12 @@ public class RestErrorAdvice {
         return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
     }
 
-    /** 楽観的排他(バージョンチェック)の例外 */
     @Error(global = true, exception = OptimisticLockException.class)
     public HttpResponse<Map<String, String[]>> handleOptimisticLock(OptimisticLockException e) {
         log.warn(e.getMessage(), e);
         return new ErrorHolder(msg, locale(), "error.OptimisticLockingFailure").result(HttpStatus.BAD_REQUEST);
     }
     
-    /** 型マッピング時の例外 */
     @Error(global = true, exception = ConversionErrorException.class)
     public HttpResponse<Map<String, String[]>> handleConversionError(ConversionErrorException e) {
         log.warn(e.getMessage());
@@ -60,7 +57,7 @@ public class RestErrorAdvice {
         return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
     }    
 
-    /** BeanValidation(JSR303)の制約例外 */
+    /** Bean Validation (JSR303) */
     @Error(global = true, exception = ConstraintViolationException.class)
     public HttpResponse<Map<String, String[]>> handleConstraintViolation(ConstraintViolationException e) {
         log.warn(e.getMessage());
@@ -69,7 +66,7 @@ public class RestErrorAdvice {
         return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
     }
     
-    // 制約例外時のキー（必要に応じて修正してください）
+    // Constraint exception key (Please correct as necessary)
     private String propKey(ConstraintViolation<?> v) {
         String key = v.getPropertyPath().toString();
         if (0 > key.indexOf('.')) {
@@ -78,27 +75,24 @@ public class RestErrorAdvice {
         return key.substring(key.lastIndexOf('.') + 1, key.length());
     }
 
-    /** アプリケーション例外 */
     @Error(global = true, exception = ValidationException.class)
     public HttpResponse<Map<String, String[]>> handleValidation(ValidationException e) {
         log.warn(e.getMessage());
         return new ErrorHolder(msg, locale(), e).result(HttpStatus.BAD_REQUEST);
     }
 
-    /** 汎用例外 */
     @Error(global = true, exception = Throwable.class)
     public HttpResponse<Map<String, String[]>> handleThrowable(Throwable e) {
-        log.error("予期せぬ例外が発生しました。", e);
-        return new ErrorHolder(msg, locale(), ErrorKeys.Exception, "サーバー側で問題が発生した可能性があります。")
+        log.error("An unexpected exception occurred.", e);
+        return new ErrorHolder(msg, locale(), ErrorKeys.Exception, "A problem might occur in a server side.")
                 .result(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
-     * 例外情報のスタックを表現します。
-     * <p>スタックした例外情報は{@link #result(HttpStatus)}を呼び出す事でMapを持つHttpResponseへ変換可能です。
-     * Mapのkeyはfiled指定値、valueはメッセージキーの変換値(messages-validation.properties)が入ります。
-     * <p>{@link #errorGlobal}で登録した場合のキーは空文字となります。
-     * <p>クライアント側は戻り値を [{"fieldA": "messageA"}, {"fieldB": "messageB"}]で受け取ります。
+     * The stack of the exception information.
+     * <p> can convert the exception information that I stacked into ResponseEntity having Map by calling {@link #result(HttpStatus)}.
+     * <p>The key when You registered in {@link #errorGlobal} becomes the null.
+     * <p>The client-side receives a return value in [{"fieldA": "messageA"}, {"fieldB": "messageB"}].
      */
     public static class ErrorHolder {
         private Map<String, List<String>> errors = new HashMap<>();
@@ -132,7 +126,6 @@ public class RestErrorAdvice {
             errorGlobal(globalMsgKey, msgArgs);
         }
 
-        /** グローバルな例外(フィールドキーが空)を追加します。 */
         public ErrorHolder errorGlobal(String msgKey, String defaultMsg, String... msgArgs) {
             if (!errors.containsKey("")) {
                 errors.put("", new ArrayList<>());
@@ -141,12 +134,10 @@ public class RestErrorAdvice {
             return this;
         }
 
-        /** グローバルな例外(フィールドキーが空)を追加します。 */
         public ErrorHolder errorGlobal(String msgKey, String... msgArgs) {
             return errorGlobal(msgKey, msgKey, msgArgs);
         }
 
-        /** フィールド単位の例外を追加します。 */
         public ErrorHolder error(String field, String msgKey, String... msgArgs) {
             if (!errors.containsKey(field)) {
                 errors.put(field, new ArrayList<>());
@@ -155,7 +146,7 @@ public class RestErrorAdvice {
             return this;
         }
 
-        /** 保有する例外情報をHttpResponseへ変換します。 */
+        /** Convert exception information to hold it into HttpResponse. */
         public HttpResponse<Map<String, String[]>> result(HttpStatus status) {
             Map<String, String[]> body = errors.entrySet().stream()
                     .collect(Collectors.toMap(

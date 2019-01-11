@@ -10,9 +10,6 @@ import javax.validation.constraints.*;
 
 import sample.util.Regex;
 
-/**
- * 各種カテゴリ/区分(必須)を表現する制約注釈。
- */
 @Documented
 @Constraint(validatedBy = {})
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })

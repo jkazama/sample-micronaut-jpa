@@ -16,7 +16,7 @@ import sample.context.orm.PagingList;
 import sample.usecase.SystemAdminService;
 
 /**
- * システムに関わる社内のUI要求を処理します。
+ * API controller of the system domain in the organization.
  */
 @Controller("/api/admin/system")
 @Validated
@@ -28,25 +28,21 @@ public class SystemAdminController {
         this.service = service;
     }
 
-    /** 利用者監査ログを検索します。 */
     @Get(value = "/audit/actor/")
     public PagingList<AuditActor> findAuditActor(@Valid FindAuditActor p) {
         return service.findAuditActor(p);
     }
 
-    /** イベント監査ログを検索します。 */
     @Get(value = "/audit/event/")
     public PagingList<AuditEvent> findAuditEvent(@Valid FindAuditEvent p) {
         return service.findAuditEvent(p);
     }
 
-    /** アプリケーション設定一覧を検索します。 */
     @Get(value = "/setting/")
     public List<AppSetting> findAppSetting(@Valid FindAppSetting p) {
         return service.findAppSetting(p);
     }
 
-    /** アプリケーション設定情報を変更します。 */
     @Post("/setting/{id}")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     public HttpResponse<Void> changeAppSetting(String id, String value) {

@@ -7,7 +7,7 @@ import java.util.regex.*;
 import org.springframework.util.*;
 
 /**
- * Orm 関連のユーティリティを提供します。
+ * An ORM-Related utility.
  */
 public abstract class OrmUtils {
 
@@ -30,7 +30,6 @@ public abstract class OrmUtils {
         COUNT_MATCH = compile(builder.toString(), CASE_INSENSITIVE);
     }
     
-    /** カウントクエリを生成します。 see QueryUtils#createCountQueryFor */
     public static String createCountQueryFor(String originalQuery) {
         Assert.hasText(originalQuery, "OriginalQuery must not be null or empty!");
         Matcher matcher = COUNT_MATCH.matcher(originalQuery);

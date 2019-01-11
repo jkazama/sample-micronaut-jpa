@@ -25,7 +25,7 @@ public class FiAccountTest extends EntityTestSupport {
     }
 
     @Test
-    public void 金融機関口座を取得する() {
+    public void load() {
         tx(() -> {
             assertThat(FiAccount.load(rep, "normal", "sample", "JPY"), allOf(
                     hasProperty("accountId", is("normal")),
@@ -43,7 +43,7 @@ public class FiAccountTest extends EntityTestSupport {
     }
 
     @Test
-    public void Hibernate5_1で追加されたアドホックなJoin検証() {
+    public void Hibernate5_1_adhocJoinCheck() {
         tx(() -> {
             fixtures.fiAcc("sample", "join", "JPY").save(rep);
             fixtures.acc("sample").save(rep);

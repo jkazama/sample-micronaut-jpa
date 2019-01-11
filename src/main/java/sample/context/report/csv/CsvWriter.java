@@ -7,7 +7,7 @@ import lombok.*;
 import sample.InvocationException;
 
 /**
- * CSVの書き出し処理をサポートするユーティリティ。
+ * A utility that supports CSV export processing.
  */
 @Data
 @AllArgsConstructor
@@ -33,16 +33,12 @@ public class CsvWriter {
         return new CsvWriter(null, out, layout);
     }
 
-    /** ファイルリソース経由での読み込み時にtrue */
+    /** true when reading via file resource */
     public boolean fromFile() {
         return file != null;
     }
 
-    /**
-     * CSV書出処理(上書き)を行います。
-     * <p>CsvWrite#appendRow 呼び出すタイミングでファイルへ随時書き出しが行われます。
-     * @param logic
-     */
+    /** CSV export processing (overwriting) is performed. */
     public void write(final CsvWrite logic) {
         OutputStream out = null;
         try {
@@ -70,14 +66,12 @@ public class CsvWriter {
     }
 
     /**
-     * CSV書出処理(追記)を行います。
-     * <p>CsvWrite#appendRow 呼び出すタイミングでファイルへ随時書き出しが行われます。
-     * <p>ファイル出力時のみ利用可能です。
-     * @param logic
+     * CSV export processing (addition) is performed.
+     * <p>It is available only when #fromFile() is true.
      */
     public void writeAppend(final CsvWrite logic) {
         if (!fromFile())
-            throw new UnsupportedOperationException("CSV書出処理の追記はファイル出力時のみサポートされます");
+            throw new UnsupportedOperationException("Additional export is supported only when outputting files");
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file, true);
@@ -149,11 +143,7 @@ public class CsvWriter {
         }
     }
 
-    /** CSV出力処理を表現します。  */
     public static interface CsvWrite {
-        /**
-         * @param stream 出力CSVインスタンス
-         */
         void execute(final CsvStream stream);
     }
 

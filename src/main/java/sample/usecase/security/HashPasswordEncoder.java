@@ -8,7 +8,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import io.micronaut.security.authentication.providers.PasswordEncoder;
 
-/** SHA-512 なハッシュエンコーダ */
+/** Hash encoder */
 @Singleton
 public class HashPasswordEncoder implements PasswordEncoder {
 

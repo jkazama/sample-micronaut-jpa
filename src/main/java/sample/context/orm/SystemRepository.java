@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 
 import sample.context.DomainHelper;
 
-/** システムスキーマのRepositoryを表現します。 */
+/** Repository of the system schema. */
 @Singleton
 @Named(SystemRepository.Name)
 public class SystemRepository extends OrmRepository {

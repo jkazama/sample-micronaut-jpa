@@ -4,7 +4,7 @@ import lombok.*;
 import sample.context.Dto;
 
 /**
- * メール配信イベントを表現します。
+ * Mail delivery events.
  */
 @Data
 @NoArgsConstructor
@@ -19,9 +19,7 @@ public class AppMailEvent<T> implements Dto {
         return new AppMailEvent<T>(mailType, value);
     }
     
-    /** メール配信種別を表現します。 */
     public static enum AppMailType {
-        /** 振込出金依頼の登録受付完了 */
         FinishRequestWithdraw;
     }
 }

@@ -15,20 +15,19 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import lombok.Data;
 
 /**
- * ResourceBundleに対する簡易アクセスを提供します。
- * <p>本コンポーネントはAPI経由でのラベル一覧の提供等、i18n用途のメッセージプロパティで利用してください。
- * <p>内部処理として単純に Spring の MessgeSource へ処理を委譲しています。
+ * Provides easy access to ResourceBundle.
+ * <p>Use this component in the message property of i18n purpose such as providing label list via API.
+ * <p>Simply delegate processing to Spring's MessgeSource as internal processing.
  */
 @ConfigurationProperties("extension.messages")
 @Data
 public class MessageHandler {
 
     /**
-     * ResourceBundle 管理対象とするリソース名一覧
-     * <p>拡張子(.properties)を含める必要はありません。
+     * ResourceBundle List of resource names to be managed
+     * <p>It is not necessary to include extensions (.properties).
      */
     private List<String> basename = new ArrayList<>();
-    /** エンコーディング */
     private String encoding = StandardCharsets.UTF_8.name();
 
     private final Map<String, ResourceBundle> bundleMap = new ConcurrentHashMap<>();
@@ -43,12 +42,10 @@ public class MessageHandler {
         return this;
     }
     
-    /** 内部に保有する MessageSource を返します。 */
     public MessageSource origin() {
         return this.msg;
     }
 
-    /** 保有するResourceBundleからメッセージキーに合致する値を返します。  */
     public String message(String key) {
         return message(key, Locale.getDefault());
     }
@@ -103,10 +100,6 @@ public class MessageHandler {
         }
     }
 
-    /**
-     * 指定されたメッセージソースのResourceBundleを返します。
-     * <p>basenameに拡張子(.properties)を含める必要はありません。
-     */
     public ResourceBundle bundle(String basename) {
         return bundle(basename, Locale.getDefault());
     }
@@ -120,10 +113,6 @@ public class MessageHandler {
         return basename + "_" + locale.toLanguageTag();
     }
 
-    /**
-     * 指定されたメッセージソースのラベルキー、値のMapを返します。
-     * <p>basenameに拡張子(.properties)を含める必要はありません。
-     */
     public Map<String, String> labels(String basename) {
         return labels(basename, Locale.getDefault());
     }
@@ -136,11 +125,10 @@ public class MessageHandler {
     }
 
     /**
-     * SpringのMessageSource経由でResourceBundleを取得するFactory。
-     * <p>プロパティファイルのエンコーディング指定を可能にしています。
+     * Factory to get ResourceBundle via Spring's MessageSource.
+     * <p>Enables encoding specification of property file.
      */
     public static class ResourceBundleFactory extends ResourceBundleMessageSource {
-        /** ResourceBundleを取得します。 */
         public static ResourceBundle create(String basename, Locale locale, String encoding) {
             ResourceBundleFactory factory = new ResourceBundleFactory();
             factory.setDefaultEncoding(encoding);

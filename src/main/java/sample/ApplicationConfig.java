@@ -12,10 +12,6 @@ import io.micronaut.security.authentication.providers.PasswordEncoder;
 import sample.context.MessageHandler;
 import sample.usecase.security.HashPasswordEncoder;
 
-/**
- * アプリケーションにおけるBean定義を表現します。
- * <p>クラス側でコンポーネント定義していない時はこちらで明示的に記載してください。
- */
 @Factory
 public class ApplicationConfig {
 
@@ -24,13 +20,13 @@ public class ApplicationConfig {
         return new HashPasswordEncoder();
     }
 
-    /** HibernateのLazyLoading回避対応。  see JacksonAutoConfiguration */
+    /** Invalidate Hibernate lazy loading. */
     @Bean
     public Hibernate5Module jsonHibernate5Module() {
         return new Hibernate5Module();
     }
 
-    /** BeanValidationメッセージに対応したValidator。 */
+    /** UTF8 to JSR303 message file. */
     @Bean
     public MessageInterpolator defaultValidator(MessageHandler msg) {
         return new ResourceBundleMessageInterpolator(new MessageSourceResourceBundleLocator(msg.origin()));

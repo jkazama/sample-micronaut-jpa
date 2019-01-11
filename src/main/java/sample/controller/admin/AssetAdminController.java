@@ -11,7 +11,7 @@ import sample.model.asset.CashInOut.FindCashInOut;
 import sample.usecase.AssetAdminService;
 
 /**
- * 資産に関わる社内のUI要求を処理します。
+ * API controller of the asset domain in the organization.
  */
 @Controller("/api/admin/asset")
 @Validated

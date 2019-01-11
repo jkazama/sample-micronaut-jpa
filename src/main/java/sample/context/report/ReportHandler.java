@@ -10,16 +10,18 @@ import sample.context.report.csv.CsvReader.CsvReadLine;
 import sample.context.report.csv.CsvWriter.CsvWrite;
 
 /**
- * 帳票処理を行います。
- * low: サンプルではCSVのみ提供します。実際は固定長/Excel/PDFなどの取込/出力なども取り扱う可能性があります。
- * low: ExcelはPOI、PDFはJasperReportの利用が一般的です。(商用製品を利用するのもおすすめです)
+ * The report client / server components.
+ * low: Provide only CSV implementation.
+ *  Actually, you handle the uptake / output such as Fixed Length/Excel/PDF.
+ * low: As for Excel, as for POI, the PDF, the use of JasperReport is common.
+ *  (it is recommended to use a commercial product)
  */
 @Singleton
 public class ReportHandler {
 
     /**
-     * 帳票をオンメモリ上でbyte配列にします。
-     * <p>大量データ等、パフォーマンス上のボトルネックが無いときはこちらの処理内でレポートを書き出しするようにしてください。
+     * Make the form a byte array on memory.
+     * <p>If there is no performance bottleneck such as mass data, please write out the report within this processing.
      */
     public byte[] convert(ReportToByte logic) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -31,59 +33,46 @@ public class ReportHandler {
         }
     }
 
-    /**
-     * CSVファイルを読み込んで行単位に処理を行います。
-     * @param data 読み込み対象となるバイナリ
-     * @param logic 行単位の読込処理
-     */
+    /** Read CSV file and process line by line. */
     public void readCsv(byte[] data, CsvReadLine logic) {
         CsvReader.of(data).read(logic);
     }
 
+    /** Read CSV file and process line by line. */
     public void readCsv(byte[] data, CsvLayout layout, CsvReadLine logic) {
         CsvReader.of(data, layout).read(logic);
     }
 
-    /**
-     * CSVストリームを読み込んで行単位に処理を行います。
-     * @param ins 読み込み対象となるInputStream
-     * @param logic 行単位の読込処理
-     */
+    /** Read CSV Stream and process line by line. */
     public void readCsv(InputStream ins, CsvReadLine logic) {
         CsvReader.of(ins).read(logic);
     }
 
+    /** Read CSV Stream and process line by line. */
     public void readCsv(InputStream ins, CsvLayout layout, CsvReadLine logic) {
         CsvReader.of(ins, layout).read(logic);
     }
 
-    /**
-     * CSVファイルを書き出しします。
-     * @param file 出力対象となるファイル
-     * @param logic 書出処理
-     */
+    /** Export the CSV file. */
     public void writeCsv(File file, CsvWrite logic) {
         CsvWriter.of(file).write(logic);
     }
 
+    /** Export the CSV file. */
     public void writeCsv(File file, CsvLayout layout, CsvWrite logic) {
         CsvWriter.of(file, layout).write(logic);
     }
 
-    /**
-     * CSVストリームに書き出しします。
-     * @param out 出力Stream
-     * @param logic 書出処理
-     */
+    /** Export the CSV to Stream. */
     public void writeCsv(OutputStream out, CsvWrite logic) {
         CsvWriter.of(out).write(logic);
     }
 
+    /** Export the CSV to Stream. */
     public void writeCsv(OutputStream out, CsvLayout layout, CsvWrite logic) {
         CsvWriter.of(out, layout).write(logic);
     }
 
-    /** レポートをバイナリ形式で OutputStream へ書き出します。 */
     public static interface ReportToByte {
         void execute(OutputStream out);
     }

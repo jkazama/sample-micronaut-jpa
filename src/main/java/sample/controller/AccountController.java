@@ -9,6 +9,9 @@ import lombok.*;
 import sample.context.actor.*;
 import sample.usecase.AccountService;
 
+/**
+ * API controller of the account domain.
+ */
 @Controller("/api/account")
 @Validated
 public class AccountController {
@@ -22,7 +25,6 @@ public class AccountController {
         this.session = session;
     }
     
-    /** ログイン状態を確認します。 */
     @Get("/loginStatus")
     public HttpResponse<Void> loginStatus() {
         return HttpResponse.ok();
@@ -33,7 +35,7 @@ public class AccountController {
         return LoginAccount.of(session.actor());
     }
 
-    /** クライアント利用用途に絞ったパラメタ */
+    /** Parameters targeted for client usage */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

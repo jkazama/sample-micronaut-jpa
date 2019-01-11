@@ -8,7 +8,7 @@ import lombok.*;
 import sample.InvocationException;
 
 /**
- * CSVの読込処理をサポートするユーティリティです。
+ * This utility supports CSV loading processing.
  */
 @Data
 @AllArgsConstructor
@@ -18,17 +18,12 @@ public class CsvReader {
     private InputStream ins;
     private CsvLayout layout = new CsvLayout();
 
-    /** バイナリリソース経由での読み込み時にtrue */
+    /** true when reading via binary resource */
     public boolean fromBinary() {
         return data != null;
     }
 
-    /**
-     * CSV読込処理を行います。
-     * <p>大量データ処理を想定してメモリ内に全展開するのではなく、Iteratorを用いた
-     * 行処理形式を利用しています。
-     * @param logic
-     */
+    /** Perform CSV loading processing.*/
     public void read(final CsvReadLine logic) {
         InputStream ins = null;
         try {
@@ -37,7 +32,7 @@ public class CsvReader {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new InvocationException("リソース処理中に例外が発生しました", e);
+            throw new InvocationException("An exception occurred during resource processing", e);
         } finally {
             if (fromBinary()) {
                 closeQuietly(ins);
@@ -54,6 +49,7 @@ public class CsvReader {
         }
     }
 
+    /** Perform CSV loading processing.*/
     public void readStream(final InputStream in, final CsvReadLine logic) throws Exception {
         PushbackReader reader = new PushbackReader(new InputStreamReader(in, layout.getCharset()), 2);
         try {
@@ -61,10 +57,11 @@ public class CsvReader {
             boolean title = false;
             while (hasNext(in, reader)) {
                 lineNum++;
-                List<String> row = readStreamLine(reader); // ヘッダ定義でも行を読み込み、シークを先に進める
+                // Also read the line in the header definition and move seek forward
+                List<String> row = readStreamLine(reader);
                 if (lineNum == 1 && StringUtils.isNotEmpty(layout.getHeader())) {
                     title = true;
-                    continue; // ヘッダ定義存在時は最初の行をスキップ
+                    continue; // Skip the first line when header definition exists
                 }
                 logic.execute(title ? lineNum - 1 : lineNum, row);
             }
@@ -73,7 +70,7 @@ public class CsvReader {
         }
     }
 
-    /** 行の存在判定を行います */
+    /** check line presence */
     private boolean hasNext(final InputStream in, final PushbackReader reader) throws Exception {
         in.available();
         int i = reader.read();
@@ -84,7 +81,7 @@ public class CsvReader {
         return false;
     }
 
-    /** InputStreamから行文字列を取得してparseLineを実行します */
+    /** get row string from InputStream and execute parseLine */
     private List<String> readStreamLine(final PushbackReader reader) throws Exception {
         boolean inQt = false;
         char qt = layout.getQuote();
@@ -97,10 +94,10 @@ public class CsvReader {
                 if (inQt) {
                     int len = 1;
                     while ((cp = nextCodePoint(reader)) != -1) {
-                        if (qt == cp) {// エスケープ
+                        if (qt == cp) {// escape
                             len++;
                             sb.appendCodePoint(cp);
-                        } else { // 終端
+                        } else { // EOL
                             reader.unread(Character.toChars(cp));
                             break;
                         }
@@ -114,7 +111,7 @@ public class CsvReader {
                     inQt = true;
                 }
             }
-            if (!inQt && sb.toString().endsWith(eol)) { // 行処理
+            if (!inQt && sb.toString().endsWith(eol)) { // row processing
                 return parseRow(stripEol(sb));
             }
         }
@@ -128,7 +125,7 @@ public class CsvReader {
         return new ArrayList<>();
     }
 
-    /** サロゲートペアを考慮した次の文字位置を返します */
+    /** returns the next character position considering the surrogate pair */
     private int nextCodePoint(final PushbackReader r) throws IOException {
         int i = r.read();
         if (i == -1) {
@@ -140,7 +137,7 @@ public class CsvReader {
             if (Character.isLowSurrogate(lo)) {
                 return Character.toCodePoint(ch, lo);
             } else {
-                throw new IOException("想定外のサロゲートペアを検出しました。[" + String.valueOf(ch) + ", " + String.valueOf(lo) + "]");
+                throw new IOException("detected unexpected surrogate pairs. [" + String.valueOf(ch) + ", " + String.valueOf(lo) + "]");
             }
         }
         return String.valueOf(ch).codePointAt(0);
@@ -150,7 +147,7 @@ public class CsvReader {
         return sb.substring(0, sb.length() - layout.getEolSymbols().length());
     }
 
-    /** CSV文字列を解析して列一覧を返します */
+    /** it parses the CSV string and returns a column list */
     public List<String> parseRow(String row) {
         int pdelim = String.valueOf(layout.getDelim()).codePointAt(0);
         int pquote = String.valueOf(layout.getQuote()).codePointAt(0);
@@ -184,11 +181,11 @@ public class CsvReader {
                 } else {
                     column.append(Character.toChars(c));
                 }
-            } else if (c == pdelim && !inQuote) { // 列切替
+            } else if (c == pdelim && !inQuote) { // column switching
                 columns.add(unescape(column.toString()));
                 column = new StringBuilder();
                 inQuote = false;
-            } else { // 末尾追記
+            } else { // append at the end
                 column.append(Character.toChars(c));
             }
         }
@@ -249,11 +246,13 @@ public class CsvReader {
         return new CsvReader(null, ins, layout);
     }
 
-    /** 行レベルのCSV読込処理を表現します。  */
+    /**
+     * It expresses row level CSV reading processing.
+     */
     public static interface CsvReadLine {
         /**
-         * @param lineNum 実行行番号(1開始)
-         * @param cols 解析された列一覧
+         * @param lineNum line number (1 start)
+         * @param cols column list
          */
         void execute(int lineNum, final List<String> cols);
     }

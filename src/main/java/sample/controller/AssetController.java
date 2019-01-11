@@ -18,7 +18,7 @@ import sample.model.asset.CashInOut.RegCashOut;
 import sample.usecase.AssetService;
 
 /**
- * 資産に関わる顧客のUI要求を処理します。
+ * API controller of the asset domain.
  */
 @Controller("/api/asset")
 @Validated
@@ -30,15 +30,11 @@ public class AssetController {
         this.service = service;
     }
     
-    /** 未処理の振込依頼情報を検索します。 */
     @Get("/cio/unprocessedOut")
     public List<CashOutUI> findUnprocessedCashOut() {
         return service.findUnprocessedCashOut().stream().map((cio) -> CashOutUI.of(cio)).collect(Collectors.toList());
     }
-
-    /**
-     * 振込出金依頼をします。
-     */
+    
     @Post("/cio/withdraw")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     public Map<String, Long> withdraw(@Body @Valid RegCashOut p) {
@@ -47,7 +43,6 @@ public class AssetController {
         return result;
     }
 
-    /** 振込出金依頼情報の表示用Dto */
     @Value
     public static class CashOutUI implements Dto {
         private static final long serialVersionUID = 1L;

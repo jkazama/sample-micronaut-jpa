@@ -25,8 +25,9 @@ import sample.model.master.*;
 import sample.util.*;
 
 /**
- * データ生成用のサポートコンポーネント。
- * <p>テストや開発時の簡易マスタデータ生成を目的としているため本番での利用は想定していません。
+ * A support component for the data generation.
+ * <p>It is aimed for master data generation at the time of a test and the development,
+ * Please do not use it in the production.
  */
 @Singleton
 @Requires(property = "extension.datafixture.enabled")
@@ -74,20 +75,19 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
 
     public void initializeInTxSystem() {
         String day = DateUtils.dayFormat(LocalDate.now());
-        new AppSetting(Timestamper.KeyDay, "system", "営業日", day).save(repSystem);
+        new AppSetting(Timestamper.KeyDay, "system", "Business Day", day).save(repSystem);
     }
 
     public void initializeInTx() {
         String ccy = "JPY";
         LocalDate baseDay = businessDay.day();
 
-        // 社員: admin (passも同様)
+        // Staff: admin (pass: admin)
         staff("admin").save(rep);
 
-        // 自社金融機関
         selfFiAcc(Remarks.CashOut, ccy).save(rep);
 
-        // 口座: sample (passも同様)
+        // Account: sample (pass: sample)
         String idSample = "sample";
         acc(idSample).save(rep);
         login(idSample).save(rep);
@@ -97,7 +97,6 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
 
     // account
 
-    /** 口座の簡易生成 */
     public Account acc(String id) {
         Account m = new Account();
         m.setId(id);
@@ -115,7 +114,6 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
         return m;
     }
 
-    /** 口座に紐付く金融機関口座の簡易生成 */
     public FiAccount fiAcc(String accountId, String category, String currency) {
         FiAccount m = new FiAccount();
         m.setAccountId(accountId);
@@ -128,22 +126,19 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
 
     // asset
 
-    /** 口座残高の簡易生成 */
     public CashBalance cb(String accountId, LocalDate baseDay, String currency, String amount) {
         return new CashBalance(null, accountId, baseDay, currency, new BigDecimal(amount), LocalDateTime.now());
     }
 
-    /** キャッシュフローの簡易生成 */
     public Cashflow cf(String accountId, String amount, LocalDate eventDay, LocalDate valueDay) {
         return cfReg(accountId, amount, valueDay).create(TimePoint.of(eventDay));
     }
 
-    /** キャッシュフロー登録パラメタの簡易生成 */
     public RegCashflow cfReg(String accountId, String amount, LocalDate valueDay) {
         return new RegCashflow(accountId, "JPY", new BigDecimal(amount), CashflowType.CashIn, "cashIn", null, valueDay);
     }
 
-    /** 振込入出金依頼の簡易生成 [発生日(T+1)/受渡日(T+3)] */
+    // eventDay(T+1) / valueDay(T+3)
     public CashInOut cio(String accountId, String absAmount, boolean withdrawal) {
         TimePoint now = rep.dh().time().tp();
         CashInOut m = new CashInOut();
@@ -165,7 +160,6 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
 
     // master
 
-    /** 社員の簡易生成 */
     public Staff staff(String id) {
         Staff m = new Staff();
         m.setId(id);
@@ -174,12 +168,10 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
         return m;
     }
 
-    /** 社員権限の簡易生成 */
     public List<StaffAuthority> staffAuth(String id, String... authority) {
         return Arrays.stream(authority).map((auth) -> new StaffAuthority(null, id, auth)).collect(Collectors.toList());
     }
 
-    /** 自社金融機関口座の簡易生成 */
     public SelfFiAccount selfFiAcc(String category, String currency) {
         SelfFiAccount m = new SelfFiAccount();
         m.setCategory(category);
@@ -189,11 +181,10 @@ public class DataFixtures implements ApplicationEventListener<ServerStartupEvent
         return m;
     }
 
-    /** 祝日の簡易生成 */
     public Holiday holiday(String dayStr) {
         Holiday m = new Holiday();
         m.setCategory(Holiday.CategoryDefault);
-        m.setName("休日サンプル");
+        m.setName("HolidaySample");
         m.setDay(DateUtils.day(dayStr));
         return m;
     }

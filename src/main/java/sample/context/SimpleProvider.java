@@ -3,7 +3,7 @@ package sample.context;
 import javax.inject.Provider;
 
 /**
- * 保有するオブジェクトを単純に返す Provider。
+ * Provider that simply returns the object it holds.
  */
 public class SimpleProvider<T> implements Provider<T> {
 

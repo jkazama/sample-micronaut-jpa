@@ -11,8 +11,7 @@ import javax.validation.constraints.*;
 import sample.util.Regex;
 
 /**
- * パスワード(必須)を表現する制約注釈。
- * low: 実際の定義はプロジェクトに大きく依存するのでサンプルでは適当にしています。
+ * low: Please make it.
  */
 @Documented
 @Constraint(validatedBy = {})

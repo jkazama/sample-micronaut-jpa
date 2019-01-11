@@ -14,7 +14,8 @@ import lombok.Data;
 import sample.context.Dto;
 
 /**
- * ユーザ名とパスワードのキー変更拡張用途
+ * Extend Micronaut's LoginController.
+ * <p>Change the username and password key.
  */
 @Replaces(io.micronaut.security.endpoints.LoginController.class)
 public class LoginController extends io.micronaut.security.endpoints.LoginController {

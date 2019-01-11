@@ -15,7 +15,7 @@ import sample.context.orm.*;
 import sample.model.BusinessDayHandler;
 
 /**
- * システムドメインに対する社内ユースケース処理。
+ * The use case processing for the system domain in the organization.
  */
 @Singleton
 public class SystemAdminService {
@@ -36,30 +36,27 @@ public class SystemAdminService {
         this.businessDay = businessDay;
     }
 
-    /** 利用者監査ログを検索します。 */
     public PagingList<AuditActor> findAuditActor(FindAuditActor p) {
         return TxTemplate.of(txm).readOnly().tx(
                 () -> AuditActor.find(rep, p));
     }
 
-    /** イベント監査ログを検索します。 */
     public PagingList<AuditEvent> findAuditEvent(FindAuditEvent p) {
         return TxTemplate.of(txm).readOnly().tx(
                 () -> AuditEvent.find(rep, p));
     }
 
-    /** アプリケーション設定一覧を検索します。 */
     public List<AppSetting> findAppSetting(FindAppSetting p) {
         return TxTemplate.of(txm).readOnly().tx(
                 () -> AppSetting.find(rep, p));
     }
 
     public void changeAppSetting(String id, String value) {
-        audit.audit("アプリケーション設定情報を変更する", () -> rep.dh().settingSet(id, value));
+        audit.audit("Change application setting information.", () -> rep.dh().settingSet(id, value));
     }
 
     public void processDay() {
-        audit.audit("営業日を進める", () -> rep.dh().time().proceedDay(businessDay.day(1)));
+        audit.audit("Forward day.", () -> rep.dh().time().proceedDay(businessDay.day(1)));
     }
 
 }

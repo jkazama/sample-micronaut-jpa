@@ -8,7 +8,7 @@ import sample.context.Timestamper;
 import sample.context.actor.*;
 
 /**
- * Entityの永続化タイミングでAOP処理を差し込む Interceptor。
+ * Interceptor to insert AOP processing in a permanency timing of Entity.
  */
 @Singleton
 public class OrmInterceptor {
@@ -21,7 +21,6 @@ public class OrmInterceptor {
         this.time = time;
     }
 
-    /** 登録時の事前差し込み処理を行います。  */
     public void touchForCreate(Object entity) {
         if (entity instanceof OrmActiveMetaRecord) {
             Actor staff = session.actor();
@@ -34,7 +33,6 @@ public class OrmInterceptor {
         }
     }
 
-    /** 変更時の事前差し込み処理を行います。   */
     public boolean touchForUpdate(final Object entity) {
         if (entity instanceof OrmActiveMetaRecord) {
             Actor staff = session.actor();

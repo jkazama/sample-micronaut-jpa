@@ -11,8 +11,8 @@ import sample.context.actor.Actor.ActorRoleType;
 import sample.usecase.security.SecurityConstants;
 
 /**
- * スレッドローカルスコープの利用者セッション。
- * <p>SecurityService 利用時はそちらの情報が優先されます。
+ * The actor session of the thread local scope.
+ * <p>When SecurityService is enabled, it takes precedence
  */
 @Singleton
 public class ActorSession {
@@ -28,21 +28,21 @@ public class ActorSession {
         this.dummyUsername = dummyUsername;
     }
 
-    /** 利用者セッションへ利用者を紐付けます。 */
+    /** Relate a actor with a actor session. */
     public ActorSession bind(final Actor actor) {
         actorLocal.set(actor);
         return this;
     }
 
-    /** 利用者セッションを破棄します。 */
+    /** Unbind a actor session. */
     public ActorSession unbind() {
         actorLocal.remove();
         return this;
     }
 
     /**
-     * 有効な利用者を返します。認証サービスが紐付けされていない時は匿名者が返されます。
-     * <p>開発時等で「認証サービスが無効かつ dummyUsername が有効な時」は、dummyUsername な利用者を返します。
+     * Return an effective actor. When You are not related, an anonymous is returned.
+     * <p>At the time of development etc. "When the authentication service is invalid and dummyUsername is valid" returns dummyUsername user
      */
     public Actor actor() {
         if (security.isPresent()) {

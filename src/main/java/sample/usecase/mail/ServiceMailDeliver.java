@@ -10,8 +10,8 @@ import sample.model.asset.CashInOut;
 import sample.usecase.event.AppMailEvent;
 
 /**
- * アプリケーション層のサービスメール送信を行います。
- * <p>AppMailEvent に応じたメール配信をおこないます。
+ * Mail deliver of the application layer.
+ * <p>Manage the transaction originally, please be careful not to call it in the transaction of the service.
  */
 @Singleton
 @Slf4j
@@ -23,7 +23,6 @@ public class ServiceMailDeliver {
         this.mail = mail;
     }
 
-    /** メール配信要求を受け付けます。 */
     @EventListener(AppMailEvent.class)
     public void handleEvent(AppMailEvent<?> event) {
         switch (event.getMailType()) {
@@ -31,13 +30,13 @@ public class ServiceMailDeliver {
             sendFinishRequestWithdraw((CashInOut)event.getValue());
             break;
         default:
-            throw new IllegalStateException("サポートされないメール種別です。 [" + event + "]");
+            throw new IllegalStateException("Unsupported mail type. [" + event + "]");
         }
     }
 
     private void sendFinishRequestWithdraw(CashInOut cio) {
-        //low: この例ではログのみ出力
-        log.info("メール送信が行われました。 [" + cio + "]");
+        //low: In this example, only log output
+        log.info("Mail transmission was done. [" + cio + "]");
     }
 
 }
