@@ -106,7 +106,7 @@ Do the server start in the next step.
 1. You move to the downloaded *sample-micronaut-jpa* directory.
 1. Run command "gradlew run".
 1. If console show "Started Application", start is completed in port 8080
-1. Start a browser and confirm a state in "http://localhost:8080/api/management/health"
+1. Start a browser and confirm a state in "http://localhost:8080/health"
 
 #### Client Check
 
