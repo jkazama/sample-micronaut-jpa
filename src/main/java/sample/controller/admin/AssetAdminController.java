@@ -24,7 +24,7 @@ public class AssetAdminController {
     }
 
     /** 未処理の振込依頼情報を検索します。 */
-    @Get("/cio")
+    @Get("/cio{?p*}")
     public List<CashInOut> findCashInOut(@Valid FindCashInOut p) {
         return service.findCashInOut(p);
     }

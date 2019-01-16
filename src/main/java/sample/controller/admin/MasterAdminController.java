@@ -43,9 +43,9 @@ public class MasterAdminController {
         private Collection<String> authorities;
     }
 
-    @Post("/holiday/")
+    @Post("/holiday")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
-    public HttpResponse<Void> registerHoliday(@Valid RegHoliday p) {
+    public HttpResponse<Void> registerHoliday(@Valid @Body RegHoliday p) {
         service.registerHoliday(p);
         return HttpResponse.ok();
     }

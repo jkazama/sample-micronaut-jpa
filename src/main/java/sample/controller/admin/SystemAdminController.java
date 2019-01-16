@@ -28,17 +28,17 @@ public class SystemAdminController {
         this.service = service;
     }
 
-    @Get(value = "/audit/actor/")
+    @Get(value = "/audit/actor{?p*}")
     public PagingList<AuditActor> findAuditActor(@Valid FindAuditActor p) {
         return service.findAuditActor(p);
     }
-
-    @Get(value = "/audit/event/")
+    
+    @Get(value = "/audit/event{?p*}")
     public PagingList<AuditEvent> findAuditEvent(@Valid FindAuditEvent p) {
         return service.findAuditEvent(p);
     }
 
-    @Get(value = "/setting/")
+    @Get(value = "/setting{?p*}")
     public List<AppSetting> findAppSetting(@Valid FindAppSetting p) {
         return service.findAppSetting(p);
     }

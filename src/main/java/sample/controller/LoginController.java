@@ -3,11 +3,13 @@ package sample.controller;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
-import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.*;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.authentication.*;
+import io.micronaut.security.config.SecurityConfigurationProperties;
 import io.micronaut.security.handlers.LoginHandler;
 import io.reactivex.Single;
 import lombok.Data;
@@ -17,6 +19,7 @@ import sample.context.Dto;
  * Extend Micronaut's LoginController.
  * <p>Change the username and password key.
  */
+@Requires(property = SecurityConfigurationProperties.PREFIX + ".enabled", value = StringUtils.TRUE)
 @Replaces(io.micronaut.security.endpoints.LoginController.class)
 public class LoginController extends io.micronaut.security.endpoints.LoginController {
 
@@ -30,7 +33,7 @@ public class LoginController extends io.micronaut.security.endpoints.LoginContro
     @SuppressWarnings("rawtypes")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
-    public Single<HttpResponse> login(@Valid @Body LoginParams params, HttpRequest<?> request) {        
+    public Single<HttpResponse> login(@Body @Valid LoginParams params, HttpRequest<?> request) {        
         return this.login(params.credentials(), request);
     }
     
@@ -38,8 +41,7 @@ public class LoginController extends io.micronaut.security.endpoints.LoginContro
     @SuppressWarnings("rawtypes")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post("/origin")
-    public Single<HttpResponse> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
-        
+    public Single<HttpResponse> login(@Body @Valid UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<?> request) {
         return super.login(usernamePasswordCredentials, request);
     }
     

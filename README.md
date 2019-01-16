@@ -108,6 +108,10 @@ Do the server start in the next step.
 1. If console show "Started Application", start is completed in port 8080
 1. Start a browser and confirm a state in "http://localhost:8080/api/management/health"
 
+#### Client Check
+
+After starting application, run `SampleClient`.
+
 ### Make Executable Jar
 
 you can do application with a single distribution file in Micronaut by making Executable Jar (jar which contains a library or the static resource).

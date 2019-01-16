@@ -44,7 +44,7 @@ public class AdminFetcher implements UserFetcher {
         /** {@inheritDoc} */
         @Override
         public Publisher<List<String>> findAuthoritiesByUsername(String username) {
-            return Flowable.just(Arrays.asList("ROLE_ADMIN"));
+            return Flowable.just(Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
         }
     }
 

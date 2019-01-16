@@ -45,6 +45,9 @@ public class ActorSession {
      * <p>At the time of development etc. "When the authentication service is invalid and dummyUsername is valid" returns dummyUsername user
      */
     public Actor actor() {
+        if (actorLocal.get() != null) {
+            return actorLocal.get();
+        }
         if (security.isPresent()) {
             return security.get().getAuthentication().map(auth -> {
                 @SuppressWarnings("unchecked") // see AuthenticationUserDetailsAdapter
@@ -65,8 +68,7 @@ public class ActorSession {
                 dummy.getAuthorities().add("ROLE_ADMIN");
                 return dummy;                
             } else {
-                Actor actor = actorLocal.get();
-                return actor != null ? actor : Actor.Anonymous;
+                return Actor.Anonymous;
             }
         }
     }
