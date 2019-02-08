@@ -1,18 +1,27 @@
 plugins {
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"    
     id "com.github.johnrengelman.shadow" version "4.0.2"
     id "net.ltgt.apt-eclipse" version "0.18"
     id "net.ltgt.apt-idea" version "0.18"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"	
 }
 
 ext.lombok_version = "1.18.4"
-ext.micronaut_version = "1.0.3"
+ext.micronaut_version = "1.0.4"
 
 apply plugin:"application"
 apply plugin:"java"
 
 version micronaut_version
 group "sample"
+
+javadoc {
+    options.encoding = "UTF-8"
+    options.addBooleanOption('Xdoclint:none', true)
+}
+
+test {
+    include "**/model/**", "**/controller/**", "**/usecase/**", "**/util/**", "**/context/**"
+}
 
 repositories {
     jcenter()
@@ -66,5 +75,5 @@ tasks.withType(JavaCompile){
 }
 
 wrapper {
-    gradleVersion = "5.1.1"
+    gradleVersion = "5.2"
 }
