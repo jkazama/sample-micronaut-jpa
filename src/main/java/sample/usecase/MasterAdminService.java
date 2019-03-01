@@ -2,7 +2,8 @@ package sample.usecase;
 
 import java.util.*;
 
-import org.springframework.stereotype.Service;
+import javax.inject.Singleton;
+
 import org.springframework.transaction.PlatformTransactionManager;
 
 import sample.context.audit.AuditHandler;
@@ -13,7 +14,7 @@ import sample.model.master.Holiday.RegHoliday;
 /**
  * The use case processing for the master domain in the organization.
  */
-@Service
+@Singleton
 public class MasterAdminService {
 
     private final DefaultRepository rep;
