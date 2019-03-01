@@ -131,7 +131,8 @@ public class SampleClient {
         public void dump(HttpResponse<ByteBuffer> res) {
             System.out.println(
                     String.format("status: %d, text: %s", res.getStatus().getCode(), res.getStatus().getReason()));
-            System.out.println(res.body().toString(StandardCharsets.UTF_8));
+            // Since it got an exception from 1.0.4
+            // System.out.println(new String(res.body().toByteArray(), StandardCharsets.UTF_8));
         }
 
     }

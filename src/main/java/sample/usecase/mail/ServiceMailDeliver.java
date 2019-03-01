@@ -2,8 +2,7 @@ package sample.usecase.mail;
 
 import javax.inject.Singleton;
 
-import org.springframework.context.event.EventListener;
-
+import io.micronaut.runtime.event.annotation.EventListener;
 import lombok.extern.slf4j.Slf4j;
 import sample.context.mail.MailHandler;
 import sample.model.asset.CashInOut;
@@ -23,7 +22,7 @@ public class ServiceMailDeliver {
         this.mail = mail;
     }
 
-    @EventListener(AppMailEvent.class)
+    @EventListener
     public void handleEvent(AppMailEvent<?> event) {
         switch (event.getMailType()) {
         case FinishRequestWithdraw:
