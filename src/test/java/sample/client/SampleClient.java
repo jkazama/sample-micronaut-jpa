@@ -1,8 +1,7 @@
 package sample.client;
 
-import java.io.*;
+import java.io.Closeable;
 import java.net.*;
-import java.nio.charset.*;
 import java.util.*;
 
 import org.junit.Test;
@@ -17,7 +16,7 @@ import sample.util.*;
 /**
  * Check api via the simple HTTP.
  * <p>you really login and handle it at the time of "micronaut.security.enabled: true".
- * <p>you want to check with administrator authority, hange "extension.auth.admin: true".
+ * <p>you want to check with administrator authority, change "extension.auth.admin: true".
  */
 public class SampleClient {
     private static final String ROOT_PATH = "http://localhost:8080";
@@ -132,7 +131,7 @@ public class SampleClient {
             System.out.println(
                     String.format("status: %d, text: %s", res.getStatus().getCode(), res.getStatus().getReason()));
             // Since it got an exception from 1.0.4
-            // System.out.println(new String(res.body().toByteArray(), StandardCharsets.UTF_8));
+            //System.out.println(res.getBody().map(b -> b.toString(StandardCharsets.UTF_8)));
         }
 
     }

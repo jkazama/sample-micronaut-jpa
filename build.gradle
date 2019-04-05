@@ -6,7 +6,7 @@ plugins {
 }
 
 ext.lombok_version = "1.18.4"
-ext.micronaut_version = "1.0.4"
+ext.micronaut_version = "1.0.5"
 
 apply plugin:"application"
 apply plugin:"java"
@@ -48,8 +48,8 @@ dependencies {
     implementation "io.micronaut:micronaut-management"
     implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
     implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.7"
-    implementation "com.ibm.icu:icu4j:63.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.8"
+    implementation "com.ibm.icu:icu4j:64.1"
     compileOnly "org.projectlombok:lombok:${lombok_version}"
     compileOnly "io.micronaut:micronaut-inject-java"
     runtime "ch.qos.logback:logback-classic:1.2.3"
@@ -75,5 +75,5 @@ tasks.withType(JavaCompile){
 }
 
 wrapper {
-    gradleVersion = "5.2"
+    gradleVersion = "5.3.1"
 }
