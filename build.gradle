@@ -6,7 +6,7 @@ plugins {
 }
 
 ext.lombok_version = "1.18.4"
-ext.micronaut_version = "1.0.5"
+ext.micronaut_version = "1.1.0"
 
 apply plugin:"application"
 apply plugin:"java"

@@ -7,6 +7,7 @@ import io.micronaut.http.*;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.security.authentication.*;
 import io.micronaut.security.session.*;
+import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.session.*;
 
 /**
@@ -18,8 +19,9 @@ import io.micronaut.session.*;
 public class ApiLoginHandler extends SessionLoginHandler {
 
     public ApiLoginHandler(SecuritySessionConfiguration securitySessionConfiguration,
-            SessionStore<Session> sessionStore) {
-        super(securitySessionConfiguration, sessionStore);
+            SessionStore<Session> sessionStore,
+            TokenConfiguration tokenConfiguration) {
+        super(securitySessionConfiguration, sessionStore, tokenConfiguration);
     }
     
     /** {@inheritDoc} */
