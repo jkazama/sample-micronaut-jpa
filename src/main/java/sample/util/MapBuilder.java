@@ -15,7 +15,7 @@ public class MapBuilder {
     
     public Map<Object, Object> build() {
         Map<Object, Object> result = new ConcurrentHashMap<>(this.origin);
-        this.origin.clear();;
+        this.origin.clear();
         return result;
     }
     
