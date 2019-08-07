@@ -118,7 +118,7 @@ you can do application with a single distribution file in Micronaut by making Ex
 
 1. Run command "gradlew build".
 1. Ouput jar to `build/libs`, you distribute it to release environment on Java8+
-1. Run command "java -jar xxx.jar" in release environment.
+1. Run command "java -jar xxx-all.jar" in release environment.
 
 ### License
 

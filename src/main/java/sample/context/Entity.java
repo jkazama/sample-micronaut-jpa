@@ -1,5 +1,7 @@
 package sample.context;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * The marker interface of the domain object.
  *
@@ -13,6 +15,7 @@ package sample.context;
  * <li>「<a href="http://www.amazon.co.jp/dp/1932394583/">Pojos in Action</a>」　Chris Richardson
  * </ul>
  */
+@Introspected
 public interface Entity {
 
 }

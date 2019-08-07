@@ -1,12 +1,12 @@
 plugins {
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
-    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "com.github.johnrengelman.shadow" version "5.1.0"
     id "net.ltgt.apt-eclipse" version "0.21"
     id "net.ltgt.apt-idea" version "0.21"
 }
 
 ext.lombok_version = "1.18.8"
-ext.micronaut_version = "1.1.4"
+ext.micronaut_version = "1.2.0"
 
 apply plugin:"application"
 apply plugin:"java"
@@ -48,6 +48,7 @@ dependencies {
     implementation "io.micronaut:micronaut-management"
     implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
     implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
+    implementation "io.micronaut.configuration:micronaut-hibernate-validator"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.8"
     implementation "com.ibm.icu:icu4j:64.2"
     compileOnly "org.projectlombok:lombok:${lombok_version}"
@@ -75,5 +76,5 @@ tasks.withType(JavaCompile){
 }
 
 wrapper {
-    gradleVersion = "5.4.1"
+    gradleVersion = "5.5.1"
 }

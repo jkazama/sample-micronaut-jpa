@@ -2,6 +2,8 @@ package sample.context;
 
 import java.io.Serializable;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * A marker interface to DTO(Data Transfer Object).
  * 
@@ -14,6 +16,7 @@ import java.io.Serializable;
  * <li>Transfer of the simple value object which does not have a domain logic.
  * </ul>
  */
+@Introspected
 public interface Dto extends Serializable {
 
 }
